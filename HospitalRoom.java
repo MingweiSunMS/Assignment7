@@ -8,26 +8,24 @@ public class HospitalRoom {
 	private int numOfPatient = 0;
 	private static final int MAXIMUM_DOCTOR_NUM = 1;
 	private static final int MAXIMUM_PATIENT_NUM = 3;
-	private static Object lock = new Object();
+	private Lock lock=new ReentrantLock();
 
 	public boolean doctorEnter(Doctor d) throws InterruptedException {
 		// TODO: implement your code here
-		synchronized (lock) {
-			while (true) {
-				boolean result;
-				if (numOfDoctor < MAXIMUM_DOCTOR_NUM) {
-					numOfDoctor++;
-					System.out.println(d.name + " enter the room. Number of doctor is " + numOfDoctor);
-					result = true;
-					lock.wait();
-				} else {
-					System.out.println(d.name + " is waiting. Number of doctor is " + numOfDoctor);
-					result = false;
-					lock.notify();
-				}
-				return result;
-			}
+		lock.lock();
+		boolean result;
+		if (numOfDoctor < MAXIMUM_DOCTOR_NUM) {
+			numOfDoctor++;
+			System.out.println(d.name + " enter the room. Number of doctor is " + numOfDoctor);
+			result = true;
+
+		} else {
+			System.out.println(d.name + " is waiting. Number of doctor is " + numOfDoctor);
+			result = false;
+
 		}
+		return result;
+		
 
 	}
 
